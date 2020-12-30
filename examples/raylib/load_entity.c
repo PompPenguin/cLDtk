@@ -8,9 +8,8 @@
 //--------------------------------------------------------------------------------------
 //                              Raylib specific functions
 //--------------------------------------------------------------------------------------
-Rectangle RectangleScale(Rectangle rec, float yscale);
 void DrawSprite(Texture2D texture, Rectangle sourceRec, Vector2 position,int flip, Color tint);
-void DrawTiles(struct layerInstances *level,Texture2D texture,int offset,Color tint);
+void DrawTiles(struct layerInstances *layer,Texture2D texture,int offset,Color tint);
 void DrawEntityRect(struct entityInstances *entity,int offset,int width,int height,Color tint);
 //--------------------------------------------------------------------------------------
 
@@ -110,13 +109,6 @@ int main(void)
 //                              Raylib specific functions
 //--------------------------------------------------------------------------------------
 
-//Rectangle Flip X or Y code
-Rectangle RectangleScale(Rectangle rec, float yscale)
-{ 
-    return (Rectangle){rec.x, rec.y, rec.width, rec.height*yscale};
-}
-
-
 
 
 void DrawSprite(Texture2D texture, Rectangle sourceRec, Vector2 position,int flip, Color tint) 
@@ -158,16 +150,16 @@ void DrawSprite(Texture2D texture, Rectangle sourceRec, Vector2 position,int fli
   
 }
 
-void DrawTiles(struct layerInstances *level,Texture2D texture,int offset,Color tint)
+void DrawTiles(struct layerInstances *layer,Texture2D texture,int offset,Color tint)
 {
     
-    for(int y=level->autoTiles_data_ptr->count ;y-- > 0;){ 
+    for(int y=layer->autoTiles_data_ptr->count ;y-- > 0;){ 
             
         DrawSprite(
             texture,
-            (Rectangle){(float)level->autoTiles_data_ptr[y].SRCx,(float)level->autoTiles_data_ptr[y].SRCy,offset,offset},
-            (Vector2){(float)level->autoTiles_data_ptr[y].x,(float)level->autoTiles_data_ptr[y].y},
-            level->autoTiles_data_ptr[y].f,
+            (Rectangle){(float)layer->autoTiles_data_ptr[y].SRCx,(float)layer->autoTiles_data_ptr[y].SRCy,offset,offset},
+            (Vector2){(float)layer->autoTiles_data_ptr[y].x,(float)layer->autoTiles_data_ptr[y].y},
+            layer->autoTiles_data_ptr[y].f,
             tint);
     }
 

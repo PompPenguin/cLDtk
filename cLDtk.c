@@ -49,7 +49,7 @@ JSON_Array *levels_array = NULL;
 
 
 
-
+//import file specification data
 void importFileSpecs(void){
     file_details_ptr = &file_detail;
      //File spec data
@@ -61,7 +61,7 @@ void importFileSpecs(void){
     file_details_ptr->nextUid = json_object_get_number(json_object(user_data), "nextUid");
 }
 
-//Print tileset data
+//import tileset data
 void importTilesetData(void){
     
     //def.tilesets data
@@ -87,6 +87,7 @@ void importTilesetData(void){
     }
 }
 
+//free tileset data from memory
 void freeTilesetData(void){
 
     free(tilesets_data_ptr->tilesets_data_ptr);
@@ -94,7 +95,7 @@ void freeTilesetData(void){
 }
 
 
-//Print Enums data
+//import enums data
 void importEnumsData(void){
 
     //defs.enums data
@@ -136,6 +137,7 @@ void importEnumsData(void){
     }
 }
 
+//free enums data from memory
 void freeEnumsData(void){
 
     //defs.enums data
@@ -153,11 +155,8 @@ void freeEnumsData(void){
 }
 
 
-
+//import level data
 void importLevelsData(void){
-
-
-    
 
     //defs.levels
     levels_array = json_object_get_array(json_object(user_data), "levels");
@@ -278,7 +277,7 @@ void importLevelsData(void){
                                     //multiply with gridsize to get real screen cordinates
                                     levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstances_data_ptr[p].fieldInstances_points_ptr[k].cx = levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridSize * json_object_get_number( json_array_get_object(levels_layerInstances_entityInstances_fieldInstances_value, k), "cx");
 
-                                                                                                                                                //multiply with gridsize to get real screen cordinates
+                                    //multiply with gridsize to get real screen cordinates
                                     levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstances_data_ptr[p].fieldInstances_points_ptr[k].cy = levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridSize * json_object_get_number( json_array_get_object(levels_layerInstances_entityInstances_fieldInstances_value, k), "cy");
                                     levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstances_data_ptr[p].fieldInstances_points_ptr[k].check = 1;
                                     levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstances_data_ptr[p].fieldInstances_points_ptr[0].size = k+1;
@@ -304,9 +303,6 @@ void importLevelsData(void){
                             }
                             else{   
                                 levels_layerInstances_entityInstances_fieldInstances_object =json_object_get_object( json_array_get_object(levels_layerInstances_entityInstances_fieldInstances, p), "__value");
-
-                                //Check for empty arrays
-                                
                                     
                                 levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr[y].fieldInstances_data_ptr[p].fieldInstances_points_ptr = malloc(sizeof(struct fieldInstances_points) );
                                 
@@ -482,8 +478,6 @@ void importLevelsData(void){
             
             
             
-            
-            // BEING COLLISIONS  
             //////////
             //AutoTiles
             //levels.layerInstances.autoTiles
@@ -512,7 +506,12 @@ void importLevelsData(void){
 
                     
             }
+            ////////// 
                 
+            //////////
+            //IntGrid
+            //levels.layerInstances.intGrid
+            //Get array inside of array    
             if(strcmp(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].type,"IntGrid") == 0){
                 levels_layerInstances_intGrid =json_object_get_array( json_array_get_object(levels_layerInstances, g), "intGrid");
 
@@ -527,10 +526,9 @@ void importLevelsData(void){
                     
                 }
             }
-                
+            //////////
+                   
 
-            //////////        
-           //End of Collisions
            
 
             
@@ -542,7 +540,7 @@ void importLevelsData(void){
 }//End of importLevelsData 
 
 
-
+//free level data from memory
 void freeLevelsData(void){
 
 
@@ -691,8 +689,6 @@ void freeLevelsData(void){
             
             
             
-            
-            // BEING COLLISIONS  
             //////////
             //AutoTiles
             //levels.layerInstances.autoTiles
@@ -700,14 +696,20 @@ void freeLevelsData(void){
             
             free(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].autoTiles_data_ptr);
             
-                
+            ////////// 
+
+            //////////
+            //IntGrid
+            //levels.layerInstances.intGrid
+            //Get array inside of array      
             if(strcmp(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].type,"IntGrid") == 0){
                 free(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].integerGrid_data_ptr);
             }
+            ////////// 
                 
 
-            //////////        
-           //End of Collisions
+                   
+
            
 
             
@@ -720,7 +722,7 @@ void freeLevelsData(void){
 }
 
 
-
+//return level data as struct
 struct levels* getLevel(char* levelName){
     struct levels *ptr_le;
     ptr_le = NULL;
@@ -738,6 +740,7 @@ struct levels* getLevel(char* levelName){
     return(ptr_le);
 }
 
+//return entity as struct
 struct entityInstances* getEntity(char* entityName,int levelId){
  
     struct entityInstances* ptr_ed;
@@ -785,7 +788,7 @@ struct entityInstances* getEntity(char* entityName,int levelId){
 }
 
 
-
+//return layer as struct
 struct layerInstances* getLayer(char* layerName,int levelId){
     
     struct layerInstances *ptr_li;
@@ -808,10 +811,7 @@ struct layerInstances* getLayer(char* layerName,int levelId){
 }
 
 
-
-
-
-
+//load JSON file into memory
 void loadJSONFile(char* fileSchema,char* fileName){
     schema = json_parse_string(fileSchema);
     user_data = json_parse_file(fileName);
@@ -823,6 +823,7 @@ void loadJSONFile(char* fileSchema,char* fileName){
     }
 }
 
+//load map data from JSON file into memory
 void importMapData(void){
     importFileSpecs();
     importTilesetData();
@@ -830,6 +831,7 @@ void importMapData(void){
     importLevelsData(); 
 }
 
+//free map data from memory
 void freeMapData(void){
     freeTilesetData();
     freeEnumsData();

@@ -1,91 +1,60 @@
-
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
-#include <stdbool.h>
 
 #include "cLDtk.h"
-#include "parson.h"
+
+
+//------------------------------------------------
+//          How to compile for GCC
+//------------------------------------------------
+//      $> gcc -c cLDtk.c parson.c -std=c99
+//      $> ar rvs libcLDtk.a cLDtk.o parson.o
+//      $> gcc example.c -o example.exe libcLDtk.a -std=c99
+//
+//
 
 int main(void){
 
     
     // parameters: fileSchema, fileName
-    loadJSONFile("{\"jsonVersion\":\"\"}","test6.txt");
+    loadJSONFile("{\"jsonVersion\":\"\"}","map.json");
     
     importMapData();
 
-        
-    
- 
     //Need to free pointer due to malloc in getEntity()
-    //struct entityInstances *chest;
     struct entityInstances *mob;
-    //struct entityInstances *player;
-
-    //struct layerInstances *collisions;
-    //struct layerInstances *bg_textures;
 
     struct levels *level1;
 
-
-   /*
-    collisions = getLayer("Collisions");
-    printf("coordId:%d, v:%d\n",collisions->integerGrid_data_ptr[5].coordId,collisions->integerGrid_data_ptr[5].v);
-
-    bg_textures = getLayer("Bg_textures");
-    
-    printf("bg_textures:%d\n",bg_textures->autoTiles_data_ptr[0].SRCx);
-    */
-    //chest = getEntity("Chest");
-    
-    level1 = getLevel("Adventure");
-    
-    
+    //Get level data
+    level1 = getLevel("Level_1"); 
+    //Get entity data
     mob = getEntity("Mob",level1->uid);
 
-
-
-    /*
-    player = getEntity("Player");
     
-    printf("-----------------------------------------------------------\n"); 
+    //------------------------------------------------
+    //              Display Entity Details
+    //------------------------------------------------
 
-    printf("Identifier:%s\n",player->identifier);
-    printf("Player X:%d,Y:%d\n",player->x,player->y);
-
-    player->x= 0; 
-    player->y = 0;
-
-    printf("Player X:%d,Y:%d\n",player->x,player->y);
-    printf("Player Size:%d\n",player->size);
-    
-    printf("-----------------------------------------------------------\n"); 
-    */
-
-    //printf("Mob Size:%d\n",mob->size);
-    
-
+    //Get entity count
     printf("Entity Instances Size: %d\n",mob->size);
     for(int f =0; f<mob->size;f++){
-        
+        //Display each entity identifier and coordinate position
         printf("----------------1---------------\n"); 
         printf("%d Identifier:%s\n",f+1,mob[f].identifier);
         printf("X:%d, Y:%d\n",mob[f].x,mob[f].y);
         
         printf("----------------2---------------\n"); 
 
-        
+        //Display each entity fieldInstance
         for(int i =0; i<mob[f].fieldInstanceCount;i++){
             printf("fieldInstance.identifier:%s\n",mob[f].fieldInstances_data_ptr[i].identifier);
             printf("fieldInstance.type:%s\n", mob[f].fieldInstances_data_ptr[i].type);
             printf("-------------------3-------------------\n"); 
             
- 
-            //Get array points from Entity
-            
+
+            //Get array points from entity
             if(strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_point) == 0 || strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_point) == 0){
                 
                 
@@ -104,7 +73,7 @@ int main(void){
                 printf("-------------------4-------------------\n"); 
                
             }
-
+            //Get arrays of: int and boolen from entity
             if(strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_int) == 0 ||
                strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_boolean) == 0 ){
                 
@@ -119,14 +88,14 @@ int main(void){
                     
                     }
                 }
-               
-                
+
                 printf("-------------------4-------------------\n"); 
                
             }
             
             
-                
+            //Get color, filepath, enum, and string from entity
+            //Must check substring with 9 chars, as there are multiple enum types
             if(strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_color) == 0 || 
             strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_filePath) == 0 ||
             strncmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_localEnum,9) == 0 ||
@@ -147,7 +116,7 @@ int main(void){
                 printf("-------------------5-------------------\n"); 
                 
             }
-            
+            //Get int, boolean from entity
             if(strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_integer) == 0 ||
                strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_boolean) == 0){
 
@@ -165,7 +134,7 @@ int main(void){
                 printf("-------------------5-------------------\n"); 
                 
             }
-
+            //Get float and float array from entity
             if(strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_float) == 0 ||
                strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_float) == 0){
 
@@ -183,7 +152,8 @@ int main(void){
                 printf("-------------------5-------------------\n"); 
                 
             }
-
+            //Get arrays of: enums, filepath, color, string from entity
+            //Must check substring with 15 chars, as there are multiple array enum types
             if(strncmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_localEnum,15) == 0 ||
             strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_filePath) == 0 ||
             strcmp(mob[f].fieldInstances_data_ptr[i].type,fieldInstance_array_color) == 0 ||
@@ -213,42 +183,10 @@ int main(void){
             
         }
     }
-    
+    printf("-----------------------------------------------------------\n");
 
-    printf("-----------------------------------------------------------\n"); 
-
-    
-
-    
-    //printf("Chest Size:%d\n",chest->size);
-    /*
-    for(int f =0; f<chest->size;f++){
-        if(chest[f].identifier == NULL) break;
-        printf("-------------------------------\n"); 
-        printf("Identifier:%s\n",chest[f].identifier);
-        printf("X:%d, Y:%d\n",chest[f].x,chest[f].y);
-        printf("-------------------------------\n"); 
-        for(int i =0; i<chest[f].fieldInstances_data_ptr->size;i++){
-            
-            printf("fieldInstance.identifier:%s\n",chest[f].fieldInstances_data_ptr[i].identifier);
-            printf("--------------------------------------\n"); 
-
-            
-            for(int g=0;g<chest[f].fieldInstances_data_ptr[i].fieldInstances_points_ptr->size;g++){
-                //if(chest[f].fieldInstances_data_ptr[i].fieldInstances_points_ptr[g].item == NULL) break;
-                
-                
-                printf("fieldInstance_item.value:%s\n",chest[f].fieldInstances_data_ptr[i].fieldInstances_points_ptr[g].item);
-            }
-        }
-    }
-    */
-   
-
-    
-
-    
-    
+    //------------------------------------------------
+     
 
 
     
@@ -257,14 +195,10 @@ int main(void){
     //----------------------------------------------------------------
     //                  FREE UP MEMORY and Unload JSON file
     //----------------------------------------------------------------
-    //free(player);
-    //free(chest);
     free(mob);
     
 
-    freeTilesetData();
-    freeEnumsData();
-    freeLevelsData();
+    freeMapData();
 
     json_value_free(schema);
     json_value_free(user_data);
