@@ -10,6 +10,7 @@ How to compile for GCC
 
 ```sh
 gcc -c cLDtk.c parson.c -std=c99
+```
 ```sh
 ar rvs libcLDtk.a cLDtk.o parson.o
 ```
