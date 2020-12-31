@@ -18,6 +18,7 @@ int main(void){
 
     
     // parameters: fileSchema, fileName
+	// must chage JSON file to txt for MS-DOS 8(name).3(extension) file format
     loadJSONFile("{\"jsonVersion\":\"\"}","map.txt");
     
     importMapData();
