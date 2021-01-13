@@ -507,6 +507,36 @@ void importLevelsData(void){
                     
             }
             ////////// 
+
+            //////////
+            //GridTiles
+            //levels.layerInstances.gridTiles
+            //Get array inside of array
+            levels_layerInstances_gridTiles =json_object_get_array( json_array_get_object(levels_layerInstances, g), "gridTiles");
+
+                
+            levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr = malloc(sizeof(struct gridTiles) * json_array_get_count(levels_layerInstances_gridTiles));
+            
+
+            for(int y=0;y<json_array_get_count(levels_layerInstances_gridTiles);y++){    
+
+                levels_layerInstances_gridTiles_results =json_object_get_array( json_array_get_object(levels_layerInstances_gridTiles, y), "px");
+                    
+
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr[y].x = json_array_get_number(levels_layerInstances_gridTiles_results,0);
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr[y].y =json_array_get_number(levels_layerInstances_gridTiles_results,1);
+
+                levels_layerInstances_gridTiles_results =json_object_get_array( json_array_get_object(levels_layerInstances_gridTiles, y), "src");
+                    
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr[y].SRCx = json_array_get_number(levels_layerInstances_gridTiles_results,0);
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr[y].SRCy =json_array_get_number(levels_layerInstances_gridTiles_results,1);
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr[y].f =json_object_get_number( json_array_get_object(levels_layerInstances_gridTiles, y), "f");
+
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr->count = y+1; 
+
+                    
+            }
+            //////////
                 
             //////////
             //IntGrid
@@ -695,6 +725,15 @@ void freeLevelsData(void){
             //Get array inside of array
             
             free(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].autoTiles_data_ptr);
+            
+            ////////// 
+
+            //////////
+            //GridTiles
+            //levels.layerInstances.gridTiles
+            //Get array inside of array
+            
+            free(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].gridTiles_data_ptr);
             
             ////////// 
 

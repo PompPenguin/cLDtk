@@ -82,6 +82,22 @@
     } autoTiles;
     //----------------------------------------------------------------
 
+    //----------------------------------------------------------------
+    //gridTiles
+    //----------------------------------------------------------------
+    JSON_Array *levels_layerInstances_gridTiles;
+    JSON_Array *levels_layerInstances_gridTiles_results;
+    JSON_Array *levels_layerInstances_gridTiles_results_tiles ;
+    struct gridTiles{
+        int count;
+        int x;
+        int y;
+        int SRCx;
+        int SRCy;
+        int f;
+    } gridTiles;
+    //----------------------------------------------------------------
+
     
     //----------------------------------------------------------------
     //fieldInstances
@@ -174,9 +190,10 @@
         int pxOffsetX;
         int pxOffsetY;
         struct autoTiles *autoTiles_data_ptr;
+        struct gridTiles *gridTiles_data_ptr;
         struct entityInstances *entityInstances_data_ptr;
         struct integerGrid  *integerGrid_data_ptr;
-    } layerInstances,*layerInstances_details_ptr, *autoTiles_data_ptr, *entityInstances_data_ptr,*integerGrid_data_ptr;
+    } layerInstances,*layerInstances_details_ptr, *autoTiles_data_ptr,*gridTiles_data_ptr, *entityInstances_data_ptr,*integerGrid_data_ptr;
     //----------------------------------------------------------------
 
     //----------------------------------------------------------------
