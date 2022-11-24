@@ -219,6 +219,7 @@
         int pxHei;
         int worldX;
         int worldY;
+        int firstIntFieldInst;
         struct levelNeighbors *neighbors;
         int numNeighbors;
         struct layerInstances *layers_data_ptr;

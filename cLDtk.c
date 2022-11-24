@@ -186,6 +186,12 @@ void importLevelsData(void){
         levels_data_ptr->levels_data_ptr[i].pxHei =json_object_get_number( json_array_get_object(levels_array, i), "pxHei");
         levels_data_ptr->levels_data_ptr[i].worldX =json_object_get_number( json_array_get_object(levels_array, i), "worldX");
         levels_data_ptr->levels_data_ptr[i].worldY =json_object_get_number( json_array_get_object(levels_array, i), "worldY");
+        
+        JSON_Array *level_field_instance_array = json_object_get_array(json_array_get_object(levels_array, i), "fieldInstances");
+        JSON_Object *first_instance = json_array_get_object(level_field_instance_array, 0);
+        if (first_instance) {
+            levels_data_ptr->levels_data_ptr[i].firstIntFieldInst = (int)json_object_get_number(first_instance, "__value");
+        }
 
         //__neighbors
         //levels.neighbors
