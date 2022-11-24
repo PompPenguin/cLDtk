@@ -192,6 +192,7 @@
         struct autoTiles *autoTiles_data_ptr;
         struct gridTiles *gridTiles_data_ptr;
         struct entityInstances *entityInstances_data_ptr;
+        int numEntityInstancesDataPtr;
         struct integerGrid  *integerGrid_data_ptr;
     } layerInstances,*layerInstances_details_ptr, *autoTiles_data_ptr,*gridTiles_data_ptr, *entityInstances_data_ptr,*integerGrid_data_ptr;
     //----------------------------------------------------------------

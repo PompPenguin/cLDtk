@@ -228,7 +228,7 @@ void importLevelsData(void){
                 
 
                 levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr = malloc(sizeof(struct entityInstances) * json_array_get_count(levels_layerInstances_entityInstances));
-                
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].numEntityInstancesDataPtr = json_array_get_count(levels_layerInstances_entityInstances);
         
                 for(int y=0;y<json_array_get_count(levels_layerInstances_entityInstances);y++){    
                     
