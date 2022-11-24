@@ -53,6 +53,7 @@ struct levels *tilesets_data_ptr = NULL;
 struct levels levels;
 struct file_detail file_detail;
 struct file_detail *file_details_ptr = NULL;
+JSON_Array *levels_neighbors = NULL;
 
 JSON_Array *levels_array = NULL;
 
@@ -183,6 +184,18 @@ void importLevelsData(void){
         levels_data_ptr->levels_data_ptr[i].uid = i; //used to reference index for each level
         levels_data_ptr->levels_data_ptr[i].pxWid =json_object_get_number( json_array_get_object(levels_array, i), "pxWid");
         levels_data_ptr->levels_data_ptr[i].pxHei =json_object_get_number( json_array_get_object(levels_array, i), "pxHei");
+        levels_data_ptr->levels_data_ptr[i].worldX =json_object_get_number( json_array_get_object(levels_array, i), "worldX");
+        levels_data_ptr->levels_data_ptr[i].worldY =json_object_get_number( json_array_get_object(levels_array, i), "worldY");
+
+        //__neighbors
+        //levels.neighbors
+        levels_neighbors =json_object_get_array(json_array_get_object(levels_array, i), "__neighbours");
+        levels_data_ptr->levels_data_ptr[i].numNeighbors = json_array_get_count(levels_neighbors);
+        levels_data_ptr->levels_data_ptr[i].neighbors = calloc(levels_data_ptr->levels_data_ptr[i].numNeighbors, sizeof(struct levelNeighbors));
+        for (int g=0;g<levels_data_ptr->levels_data_ptr[i].numNeighbors;g++){
+            levels_data_ptr->levels_data_ptr[i].neighbors[g].dir = json_object_get_string(json_array_get_object(levels_neighbors, g), "dir")[0];
+            levels_data_ptr->levels_data_ptr[i].neighbors[g].uid = (int)json_object_get_number(json_array_get_object(levels_neighbors, g), "levelUid");
+        }
 
         //layerInstances
         //levels.layerInstances
@@ -591,7 +604,8 @@ void freeLevelsData(void){
 
     for(int i=0;i<json_array_get_count(levels_array);i++){
         
-
+        //level neighbors
+        free(levels_data_ptr->levels_data_ptr[i].neighbors);
 
         //layerInstances
         //levels.layerInstances
@@ -780,6 +794,23 @@ struct levels* getLevel(char* levelName){
     for(int i=0;i<json_array_get_count(levels_array);i++){
                           
         if(strcmp(levels_data_ptr->levels_data_ptr[i].identifier,levelName)==0){
+                    
+            ptr_le = &levels_data_ptr->levels_data_ptr[i];
+            
+        }    
+        
+    }
+    return(ptr_le);
+}
+
+struct levels* getLevelFromUid(int levelId){
+    struct levels *ptr_le;
+    ptr_le = NULL;
+
+    levels_array = json_object_get_array(json_object(user_data), "levels");
+    for(int i=0;i<json_array_get_count(levels_array);i++){
+                          
+        if(levels_data_ptr->levels_data_ptr[i].uid == levelId){
                     
             ptr_le = &levels_data_ptr->levels_data_ptr[i];
             

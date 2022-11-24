@@ -197,14 +197,27 @@
     //----------------------------------------------------------------
 
     //----------------------------------------------------------------
+    // Level Neighbors
+    //----------------------------------------------------------------
+    struct levelNeighbors {
+        char dir;
+        int uid;
+    };
+
+    //----------------------------------------------------------------
     // Levels
     //----------------------------------------------------------------
     extern JSON_Array *levels_array;
+    extern JSON_Array *levels_neighbors;
     extern struct levels{
         const char *identifier;
         int uid;
         int pxWid;
         int pxHei;
+        int worldX;
+        int worldY;
+        struct levelNeighbors *neighbors;
+        int numNeighbors;
         struct layerInstances *layers_data_ptr;
         struct tilesets *tilesets_data_ptr;
         struct enums *enums_data_ptr;    
@@ -265,6 +278,7 @@ void freeEnumsData(void);
 void importLevelsData(void);
 void freeLevelsData(void);
 struct levels* getLevel(char* levelName);
+struct levels* getLevelFromUid(int levelId);
 struct entityInstances* getEntity(char* entityName,int levelId);
 struct layerInstances* getLayer(char* layerName,int levelId);
 void loadJSONFile(char* fileSchema,char* fileName);
