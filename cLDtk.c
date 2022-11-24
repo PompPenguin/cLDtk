@@ -500,6 +500,19 @@ void importLevelsData(void){
             }//// END OF ENTITIES
             
             
+            //////////
+            //IntGridCsv
+            //levels.layerInstances.intGrid/intGridWidth/intGridHeight
+            //Get the int grid
+            JSON_Array *intGrid = json_object_get_array( json_array_get_object(levels_layerInstances, g), "intGridCsv");
+            levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].intGrid = malloc(sizeof(int) * 
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].cWid *
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].cHei
+            );
+            for (int y = 0; y < json_array_get_count(intGrid); y++) {
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].intGrid[y] = (int)json_array_get_number(intGrid, y);
+            }
+
             
             //////////
             //AutoTiles
@@ -742,6 +755,11 @@ void freeLevelsData(void){
             }//// END OF ENTITIES
             
             
+            //////////
+            //IntGridCsv
+            //levels.layerInstances.intGrid
+            //Free array
+            free(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].intGrid);
             
             //////////
             //AutoTiles
