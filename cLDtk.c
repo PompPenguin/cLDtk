@@ -43,6 +43,16 @@ JSON_Array *levels_layerInstances_entityInstances = NULL;
 
 JSON_Array *levels_layerInstances = NULL;
 JSON_Array *levels_layerInstances_gridTiles = NULL;
+JSON_Array *levels_layerInstances_gridTiles_results = NULL;
+//JSON_Array *levels_layerInstances_gridTiles_results_tiles = NULL;
+
+JSON_Object *levels_layerInstances_entityInstances_fieldInstances_object = NULL;
+struct file_detail *levels_data_ptr = NULL;
+struct levels *enums_data_ptr = NULL;
+struct levels *tilesets_data_ptr = NULL;
+struct levels levels;
+struct file_detail file_detail;
+struct file_detail *file_details_ptr = NULL;
 
 JSON_Array *levels_array = NULL;
 

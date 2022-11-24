@@ -87,7 +87,7 @@
     //----------------------------------------------------------------
     extern JSON_Array *levels_layerInstances_gridTiles;
     extern JSON_Array *levels_layerInstances_gridTiles_results;
-    extern JSON_Array *levels_layerInstances_gridTiles_results_tiles ;
+    //extern JSON_Array *levels_layerInstances_gridTiles_results_tiles ; unused?
     extern struct gridTiles{
         int count;
         int x;

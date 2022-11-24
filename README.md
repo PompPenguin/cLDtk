@@ -28,3 +28,5 @@ ar rvs libcLDtk.a cLDtk.o parson.o
 ```sh
 gcc example.c -o example.exe libcLDtk.a -std=c99 -lalleg
 ```
+
+The person I forked it from said to compile it into a static library but I don't see any need to. You can it you want i guess.
