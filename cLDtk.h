@@ -8,16 +8,16 @@
     //                   *** INIT GLOBAL VARIABLES ***
     //----------------------------------------------------------------
 
-    JSON_Value *schema;
-    JSON_Value *user_data ;
+    extern JSON_Value *schema;
+    extern JSON_Value *user_data ;
     
     
 
     //----------------------------------------------------------------
     // Tilesets
     //----------------------------------------------------------------
-    JSON_Array *tilesets_array ; 
-    struct tilesets{
+    extern JSON_Array *tilesets_array ; 
+    extern struct tilesets{
         const char *identifier;
         int uid;
         const char *relPath;
@@ -33,22 +33,22 @@
     //----------------------------------------------------------------
     // Enums
     //----------------------------------------------------------------
-    JSON_Array *enums_array;
-    JSON_Array *enums_values;
-    JSON_Array *enums_externalEnums;
-    JSON_Array *enums_tileSrcRec;
-    struct enums_details{
+    extern JSON_Array *enums_array;
+    extern JSON_Array *enums_values;
+    extern JSON_Array *enums_externalEnums;
+    extern JSON_Array *enums_tileSrcRec;
+    extern struct enums_details{
         const char *id;
         int tileId;
         int tileSrcRec[4];
     } enums_details;
 
-    struct enums{
+    extern struct enums{
         const char *identifier;
         int uid;
         int iconTilesetUid;
         struct enums_details *enums_details_ptr;
-    } enums,*enums_details_ptr;
+    } enums, *enums_details_ptr;
     //----------------------------------------------------------------
 
     
@@ -57,9 +57,9 @@
     //----------------------------------------------------------------
     //intGrid
     //----------------------------------------------------------------
-    JSON_Array *levels_layerInstances_intGrid;
-    JSON_Array *levels_layerInstances_intGrid_results ;
-    struct integerGrid{
+    extern JSON_Array *levels_layerInstances_intGrid;
+    extern JSON_Array *levels_layerInstances_intGrid_results ;
+    extern struct integerGrid{
         int count;
         int coordId; //Where on the map the tile is located
         int v;       //The type of collision tile
@@ -69,10 +69,10 @@
     //----------------------------------------------------------------
     //autoTiles
     //----------------------------------------------------------------
-    JSON_Array *levels_layerInstances_autoTiles;
-    JSON_Array *levels_layerInstances_autoTiles_results;
-    JSON_Array *levels_layerInstances_autoTiles_results_tiles ;
-    struct autoTiles{
+    extern JSON_Array *levels_layerInstances_autoTiles;
+    extern JSON_Array *levels_layerInstances_autoTiles_results;
+    extern JSON_Array *levels_layerInstances_autoTiles_results_tiles ;
+    extern struct autoTiles{
         int count;
         int x;
         int y;
@@ -85,10 +85,10 @@
     //----------------------------------------------------------------
     //gridTiles
     //----------------------------------------------------------------
-    JSON_Array *levels_layerInstances_gridTiles;
-    JSON_Array *levels_layerInstances_gridTiles_results;
-    JSON_Array *levels_layerInstances_gridTiles_results_tiles ;
-    struct gridTiles{
+    extern JSON_Array *levels_layerInstances_gridTiles;
+    extern JSON_Array *levels_layerInstances_gridTiles_results;
+    //extern JSON_Array *levels_layerInstances_gridTiles_results_tiles ; unused?
+    extern struct gridTiles{
         int count;
         int x;
         int y;
@@ -102,16 +102,16 @@
     //----------------------------------------------------------------
     //fieldInstances
     //----------------------------------------------------------------
-    JSON_Array *levels_layerInstances_entityInstances_fieldInstances;
+    extern JSON_Array *levels_layerInstances_entityInstances_fieldInstances;
 
-    JSON_Array *levels_layerInstances_entityInstances_fieldInstances_value;
-    JSON_Array *levels_layerInstances_entityInstances_fieldInstances_realEditorValues;
-    JSON_Array *levels_layerInstances_entityInstances_fieldInstances_realEditorValues_params;
+    extern JSON_Array *levels_layerInstances_entityInstances_fieldInstances_value;
+    extern JSON_Array *levels_layerInstances_entityInstances_fieldInstances_realEditorValues;
+    extern JSON_Array *levels_layerInstances_entityInstances_fieldInstances_realEditorValues_params;
 
-    JSON_Object *levels_layerInstances_entityInstances_fieldInstances_object;
+    extern JSON_Object *levels_layerInstances_entityInstances_fieldInstances_object;
 
     //points
-    struct fieldInstances_points{
+    extern struct fieldInstances_points{
         int cx;
         int cy;
         signed char check; //Cheat check to handle NULL values until I find a better way
@@ -120,7 +120,7 @@
 
     //Used with:
     //floats
-    struct fieldInstances_floats{
+    extern struct fieldInstances_floats{
         float floatValue;
         signed char check; //Cheat check to handle NULL values until I find a better way
         int size;
@@ -128,7 +128,7 @@
 
     //Used with:
     //ints, bools
-    struct fieldInstances_ints{
+    extern struct fieldInstances_ints{
         int intValue;
         signed char check; //Cheat check to handle NULL values until I find a better way
         int size;
@@ -137,14 +137,14 @@
 
     //Used with:
     // strings, multilines, colors, items, filepaths
-    struct fieldInstances_strings{
+    extern struct fieldInstances_strings{
         const char *strValue;
         signed char check; //Cheat check to handle NULL values until I find a better way
         int size;
     } fieldInstances_strings;
 
 
-    struct fieldInstances{
+    extern struct fieldInstances{
         const char *identifier;
         const char *type;
         struct fieldInstances_points *fieldInstances_points_ptr;
@@ -159,8 +159,8 @@
     //----------------------------------------------------------------
     //entityInstances
     //----------------------------------------------------------------
-    JSON_Array *levels_layerInstances_entityInstances;
-    struct entityInstances{
+    extern JSON_Array *levels_layerInstances_entityInstances;
+    extern struct entityInstances{
         const char *identifier;
         int cx;
         int cy;
@@ -177,9 +177,9 @@
     //----------------------------------------------------------------
     //layerInstances
     //----------------------------------------------------------------
-    JSON_Array *levels_layerInstances;
-    JSON_Array *levels_layerInstances_gridTiles ;
-    struct layerInstances{
+    extern JSON_Array *levels_layerInstances;
+    extern JSON_Array *levels_layerInstances_gridTiles ;
+    extern struct layerInstances{
         const char *identifier;
         const char *type;
         int cWid;
@@ -192,19 +192,36 @@
         struct autoTiles *autoTiles_data_ptr;
         struct gridTiles *gridTiles_data_ptr;
         struct entityInstances *entityInstances_data_ptr;
+        int numEntityInstancesDataPtr;
         struct integerGrid  *integerGrid_data_ptr;
+        int *intGrid;
+
     } layerInstances,*layerInstances_details_ptr, *autoTiles_data_ptr,*gridTiles_data_ptr, *entityInstances_data_ptr,*integerGrid_data_ptr;
     //----------------------------------------------------------------
 
     //----------------------------------------------------------------
+    // Level Neighbors
+    //----------------------------------------------------------------
+    struct levelNeighbors {
+        char dir;
+        int uid;
+    };
+
+    //----------------------------------------------------------------
     // Levels
     //----------------------------------------------------------------
-    JSON_Array *levels_array;
-    struct levels{
+    extern JSON_Array *levels_array;
+    extern JSON_Array *levels_neighbors;
+    extern struct levels{
         const char *identifier;
         int uid;
         int pxWid;
         int pxHei;
+        int worldX;
+        int worldY;
+        int firstIntFieldInst;
+        struct levelNeighbors *neighbors;
+        int numNeighbors;
         struct layerInstances *layers_data_ptr;
         struct tilesets *tilesets_data_ptr;
         struct enums *enums_data_ptr;    
@@ -214,7 +231,7 @@
     //----------------------------------------------------------------
     // File specs
     //----------------------------------------------------------------
-    struct file_detail{
+    extern struct file_detail{
         const char *jsonVersion;
         double defaultPivotX;
         double defaultPivotY;
@@ -265,6 +282,7 @@ void freeEnumsData(void);
 void importLevelsData(void);
 void freeLevelsData(void);
 struct levels* getLevel(char* levelName);
+struct levels* getLevelFromUid(int levelId);
 struct entityInstances* getEntity(char* entityName,int levelId);
 struct layerInstances* getLayer(char* layerName,int levelId);
 void loadJSONFile(char* fileSchema,char* fileName);

@@ -43,6 +43,17 @@ JSON_Array *levels_layerInstances_entityInstances = NULL;
 
 JSON_Array *levels_layerInstances = NULL;
 JSON_Array *levels_layerInstances_gridTiles = NULL;
+JSON_Array *levels_layerInstances_gridTiles_results = NULL;
+//JSON_Array *levels_layerInstances_gridTiles_results_tiles = NULL;
+
+JSON_Object *levels_layerInstances_entityInstances_fieldInstances_object = NULL;
+struct file_detail *levels_data_ptr = NULL;
+struct levels *enums_data_ptr = NULL;
+struct levels *tilesets_data_ptr = NULL;
+struct levels levels;
+struct file_detail file_detail;
+struct file_detail *file_details_ptr = NULL;
+JSON_Array *levels_neighbors = NULL;
 
 JSON_Array *levels_array = NULL;
 
@@ -170,9 +181,27 @@ void importLevelsData(void){
         
         levels_data_ptr->levels_data_ptr[i].identifier =json_object_get_string( json_array_get_object(levels_array, i), "identifier");
 
-        levels_data_ptr->levels_data_ptr[i].uid = i; //used to reference index for each level
+        levels_data_ptr->levels_data_ptr[i].uid =json_object_get_number(json_array_get_object(levels_array, i), "uid"); //i; //used to reference index for each level
         levels_data_ptr->levels_data_ptr[i].pxWid =json_object_get_number( json_array_get_object(levels_array, i), "pxWid");
         levels_data_ptr->levels_data_ptr[i].pxHei =json_object_get_number( json_array_get_object(levels_array, i), "pxHei");
+        levels_data_ptr->levels_data_ptr[i].worldX =json_object_get_number( json_array_get_object(levels_array, i), "worldX");
+        levels_data_ptr->levels_data_ptr[i].worldY =json_object_get_number( json_array_get_object(levels_array, i), "worldY");
+        
+        JSON_Array *level_field_instance_array = json_object_get_array(json_array_get_object(levels_array, i), "fieldInstances");
+        JSON_Object *first_instance = json_array_get_object(level_field_instance_array, 0);
+        if (first_instance) {
+            levels_data_ptr->levels_data_ptr[i].firstIntFieldInst = (int)json_object_get_number(first_instance, "__value");
+        }
+
+        //__neighbors
+        //levels.neighbors
+        levels_neighbors =json_object_get_array(json_array_get_object(levels_array, i), "__neighbours");
+        levels_data_ptr->levels_data_ptr[i].numNeighbors = json_array_get_count(levels_neighbors);
+        levels_data_ptr->levels_data_ptr[i].neighbors = calloc(levels_data_ptr->levels_data_ptr[i].numNeighbors, sizeof(struct levelNeighbors));
+        for (int g=0;g<levels_data_ptr->levels_data_ptr[i].numNeighbors;g++){
+            levels_data_ptr->levels_data_ptr[i].neighbors[g].dir = json_object_get_string(json_array_get_object(levels_neighbors, g), "dir")[0];
+            levels_data_ptr->levels_data_ptr[i].neighbors[g].uid = (int)json_object_get_number(json_array_get_object(levels_neighbors, g), "levelUid");
+        }
 
         //layerInstances
         //levels.layerInstances
@@ -205,7 +234,7 @@ void importLevelsData(void){
                 
 
                 levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].entityInstances_data_ptr = malloc(sizeof(struct entityInstances) * json_array_get_count(levels_layerInstances_entityInstances));
-                
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].numEntityInstancesDataPtr = json_array_get_count(levels_layerInstances_entityInstances);
         
                 for(int y=0;y<json_array_get_count(levels_layerInstances_entityInstances);y++){    
                     
@@ -477,6 +506,19 @@ void importLevelsData(void){
             }//// END OF ENTITIES
             
             
+            //////////
+            //IntGridCsv
+            //levels.layerInstances.intGrid/intGridWidth/intGridHeight
+            //Get the int grid
+            JSON_Array *intGrid = json_object_get_array( json_array_get_object(levels_layerInstances, g), "intGridCsv");
+            levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].intGrid = malloc(sizeof(int) * 
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].cWid *
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].cHei
+            );
+            for (int y = 0; y < json_array_get_count(intGrid); y++) {
+                levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].intGrid[y] = (int)json_array_get_number(intGrid, y);
+            }
+
             
             //////////
             //AutoTiles
@@ -581,7 +623,8 @@ void freeLevelsData(void){
 
     for(int i=0;i<json_array_get_count(levels_array);i++){
         
-
+        //level neighbors
+        free(levels_data_ptr->levels_data_ptr[i].neighbors);
 
         //layerInstances
         //levels.layerInstances
@@ -718,6 +761,11 @@ void freeLevelsData(void){
             }//// END OF ENTITIES
             
             
+            //////////
+            //IntGridCsv
+            //levels.layerInstances.intGrid
+            //Free array
+            free(levels_data_ptr->levels_data_ptr[i].layers_data_ptr[g].intGrid);
             
             //////////
             //AutoTiles
@@ -779,9 +827,44 @@ struct levels* getLevel(char* levelName){
     return(ptr_le);
 }
 
+int getIdFromUid(int levelUId){
+    int id = 0;
+
+    levels_array = json_object_get_array(json_object(user_data), "levels");
+    for(int i=0;i<json_array_get_count(levels_array);i++){
+                          
+        if(levels_data_ptr->levels_data_ptr[i].uid == levelUId){
+                    
+            id = i;
+            break;
+            
+        }    
+        
+    }
+    return id;
+}
+
+struct levels* getLevelFromUid(int levelId){
+    struct levels *ptr_le;
+    ptr_le = NULL;
+
+    levels_array = json_object_get_array(json_object(user_data), "levels");
+    for(int i=0;i<json_array_get_count(levels_array);i++){
+                          
+        if(levels_data_ptr->levels_data_ptr[i].uid == levelId){
+                    
+            ptr_le = &levels_data_ptr->levels_data_ptr[i];
+            
+        }    
+        
+    }
+    return(ptr_le);
+}
+
 //return entity as struct
-struct entityInstances* getEntity(char* entityName,int levelId){
- 
+struct entityInstances* getEntity(char* entityName,int levelUId){
+    int levelId = getIdFromUid(levelUId);
+
     struct entityInstances* ptr_ed;
     int ptr_buffer = 2;
     ptr_ed = malloc(ptr_buffer * sizeof(struct entityInstances));  
@@ -828,8 +911,9 @@ struct entityInstances* getEntity(char* entityName,int levelId){
 
 
 //return layer as struct
-struct layerInstances* getLayer(char* layerName,int levelId){
-    
+struct layerInstances* getLayer(char* layerName,int levelUId){
+    int levelId = getIdFromUid(levelUId);
+
     struct layerInstances *ptr_li;
     ptr_li = NULL;
 
